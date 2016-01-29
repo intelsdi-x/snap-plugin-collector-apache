@@ -3,7 +3,6 @@ package apache
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -54,7 +53,7 @@ func getMetrics(webserver string, metrics []string) ([]plugin.PluginMetricType, 
 	}
 	if resp.StatusCode != 200 {
 		defer resp.Body.Close()
-		return nil, fmt.Errorf("%v,%v", errReqFailed, err)
+		return nil, errReqFailed
 	}
 	defer resp.Body.Close()
 
