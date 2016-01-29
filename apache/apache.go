@@ -28,7 +28,7 @@ var (
 	errBadWebserver = errors.New("Failed to parse given apache_mod_status_url")
 	errReqFailed    = errors.New("Request to Apache webserver failed")
 
-	scoreboard = map[string]string{
+	workers = map[string]string{
 		"Closing":      "C",
 		"DNSLookup":    "D",
 		"Finishing":    "G",
@@ -62,12 +62,12 @@ func getMetrics(webserver string, metrics []string) ([]plugin.PluginMetricType, 
 	scanner := bufio.NewScanner(resp.Body)
 	for scanner.Scan() {
 		var ns string
-		var scoreboardflag bool
+		var workersflag bool
 		line := scanner.Text()
 		lineslice := strings.Split(line, ": ")
 		if strings.Contains(line, ":") {
-			if strings.Contains(line, "Scoreboard") {
-				scoreboardflag = true
+			if strings.Contains(line, "workers") {
+				workersflag = true
 			} else {
 				ns = strings.Replace(lineslice[0], " ", "_", -1)
 				data, err := strconv.ParseFloat(lineslice[1], 64)
@@ -82,11 +82,11 @@ func getMetrics(webserver string, metrics []string) ([]plugin.PluginMetricType, 
 				}
 			}
 		}
-		if scoreboardflag {
-			for ns, _ := range scoreboard {
-				data := strings.Count(line, scoreboard[ns])
+		if workersflag {
+			for ns, _ := range workers {
+				data := strings.Count(line, workers[ns])
 				mtsmap[ns] = plugin.PluginMetricType{
-					Namespace_: []string{"intel", "apache", "scoreboard", ns},
+					Namespace_: []string{"intel", "apache", "workers", ns},
 					Data_:      data,
 					Source_:    webserver,
 					Timestamp_: time.Now(),

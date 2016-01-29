@@ -140,17 +140,17 @@ Namespace | Data Type | Description (optional)
 /intel/apache/Total_Accesses|float64|Total accesses
 /intel/apache/Total_kBytes|float64|Total kBytes
 /intel/apache/Uptime|float64|Server uptime
-/intel/apache/scoreboard/Closing|float64|Closing connection
-/intel/apache/scoreboard/DNSLookup|float64|DNS Lookup
-/intel/apache/scoreboard/Finishing|float64|Gracefully finishing
-/intel/apache/scoreboard/Idle_Cleanup|float64|Idle cleanup of worker
-/intel/apache/scoreboard/Keepalive|float64|Keepalive (read)
-/intel/apache/scoreboard/Logging|float64|Logging
-/intel/apache/scoreboard/Open|float64|Open slot with no current process
-/intel/apache/scoreboard/Reading|float64|Reading Request
-/intel/apache/scoreboard/Sending|float64|Sending Reply
-/intel/apache/scoreboard/Starting|float64|Starting up
-/intel/apache/scoreboard/Waiting|float64|Waiting for Connection
+/intel/apache/workers/Closing|float64|Closing connection
+/intel/apache/workers/DNSLookup|float64|DNS Lookup
+/intel/apache/workers/Finishing|float64|Gracefully finishing
+/intel/apache/workers/Idle_Cleanup|float64|Idle cleanup of worker
+/intel/apache/workers/Keepalive|float64|Keepalive (read)
+/intel/apache/workers/Logging|float64|Logging
+/intel/apache/workers/Open|float64|Open slot with no current process
+/intel/apache/workers/Reading|float64|Reading Request
+/intel/apache/workers/Sending|float64|Sending Reply
+/intel/apache/workers/Starting|float64|Starting up
+/intel/apache/workers/Waiting|float64|Waiting for Connection
 
 
 ### Examples
@@ -177,7 +177,7 @@ Create task manifest for writing to a file. See [`../snap-plugin-collector-apach
             "metrics": {
                 "/intel/apache/CPULoad": {},
                 "/intel/apache/BytesPerSec": {},
-                "/intel/apache/scoreboard/sending": {}
+                "/intel/apache/workers/Sending": {}
             },
             "config": {
                 "/intel/mock": {
@@ -211,10 +211,10 @@ $ $SNAP_PATH/bin/snapctl task create -t ../snap-plugin-collector-apache/examples
 ```
 2016-01-27 15:08:51.09527825 -0800 PST|[intel apache BytesPerSec]|92.0861|127.0.0.1:80
 2016-01-27 15:08:51.09527251 -0800 PST|[intel apache CPULoad]|.0209417|127.0.0.1:80
-2016-01-27 15:08:51.095292429 -0800 PST|[intel apache scoreboard sending]|1|127.0.0.1:80
+2016-01-27 15:08:51.095292429 -0800 PST|[intel apache workers Sending]|1|127.0.0.1:80
 2016-01-27 15:08:52.096059795 -0800 PST|[intel apache BytesPerSec]|92.086|127.0.0.1:80
 2016-01-27 15:08:52.096056768 -0800 PST|[intel apache CPULoad]|.0209417|127.0.0.1:80
-2016-01-27 15:08:52.096089108 -0800 PST|[intel apache scoreboard sending]|1|127.0.0.1:80
+2016-01-27 15:08:52.096089108 -0800 PST|[intel apache workers Sending]|1|127.0.0.1:80
 ```
 
 ### Roadmap
