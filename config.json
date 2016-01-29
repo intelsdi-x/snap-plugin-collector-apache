@@ -1,0 +1,12 @@
+{
+	"plugins": {
+		"collector": {
+			"apache": {
+				"all": {
+					"apache_mod_status_url": "http://127.0.0.1:80/server-status?auto"
+				}
+			}
+		}
+	}
+}
+

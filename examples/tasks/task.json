@@ -1,0 +1,18 @@
+{
+    "version": 1,
+    "schedule": {
+        "type": "simple",
+        "interval": "1s"
+    },
+    "workflow": {
+        "collect": {
+            "metrics": {
+                "/intel/apache/CPULoad": {},
+                "/intel/apache/BytesPerSec": {},
+                "/intel/apache/scoreboard/Sending": {}
+            },
+            "config": {
+            }
+        }
+    }
+}
