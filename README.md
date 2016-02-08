@@ -33,7 +33,7 @@ It's used in the [snap framework](http://github.com/intelsdi-x/snap).
   * [Examples](#examples)
 3. [Community Support](#community-support)
 4. [Contributing](#contributing)
-5. [License](#license-and-authors)
+5. [License](#license)
 6. [Acknowledgements](#acknowledgements)
 
 ## Getting Started
