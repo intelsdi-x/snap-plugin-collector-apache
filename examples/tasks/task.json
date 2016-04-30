@@ -9,7 +9,7 @@
             "metrics": {
                 "/intel/apache/CPULoad": {},
                 "/intel/apache/BytesPerSec": {},
-                "/intel/apache/scoreboard/Sending": {}
+                "/intel/apache/workers/Sending": {}
             },
             "config": {
             }

@@ -1,6 +1,6 @@
 {
-	"ImportPath": "github.com/intelsdi-x/snap-collector-apache",
-	"GoVersion": "go1.5",
+	"ImportPath": "github.com/intelsdi-x/snap-plugin-collector-apache",
+	"GoVersion": "go1.6.1",
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
@@ -9,28 +9,33 @@
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/control/plugin",
-			"Comment": "v0.10.0-beta-20-g05a376c",
-			"Rev": "05a376cd75ac33e3e88d379c8dd55e1079c83cef"
+			"Comment": "v0.13.0-beta-69-g0a2acb7",
+			"Rev": "0a2acb7bd09234e363c8fd8ce0d824e43cec145a"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/core",
-			"Comment": "v0.10.0-beta-20-g05a376c",
-			"Rev": "05a376cd75ac33e3e88d379c8dd55e1079c83cef"
+			"Comment": "v0.13.0-beta-69-g0a2acb7",
+			"Rev": "0a2acb7bd09234e363c8fd8ce0d824e43cec145a"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/pkg/ctree",
-			"Comment": "v0.10.0-beta-20-g05a376c",
-			"Rev": "05a376cd75ac33e3e88d379c8dd55e1079c83cef"
+			"Comment": "v0.13.0-beta-69-g0a2acb7",
+			"Rev": "0a2acb7bd09234e363c8fd8ce0d824e43cec145a"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/pkg/schedule",
-			"Comment": "v0.10.0-beta-20-g05a376c",
-			"Rev": "05a376cd75ac33e3e88d379c8dd55e1079c83cef"
+			"Comment": "v0.13.0-beta-69-g0a2acb7",
+			"Rev": "0a2acb7bd09234e363c8fd8ce0d824e43cec145a"
 		},
 		{
 			"ImportPath": "github.com/intelsdi-x/snap/scheduler/wmap",
-			"Comment": "v0.10.0-beta-20-g05a376c",
-			"Rev": "05a376cd75ac33e3e88d379c8dd55e1079c83cef"
+			"Comment": "v0.13.0-beta-69-g0a2acb7",
+			"Rev": "0a2acb7bd09234e363c8fd8ce0d824e43cec145a"
+		},
+		{
+			"ImportPath": "github.com/robfig/cron",
+			"Comment": "v1-7-g32d9c27",
+			"Rev": "32d9c273155a0506d27cf73dd1246e86a470997e"
 		},
 		{
 			"ImportPath": "gopkg.in/yaml.v2",
