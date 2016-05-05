@@ -24,6 +24,7 @@ import (
 
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
+	"github.com/intelsdi-x/snap/core"
 	"github.com/intelsdi-x/snap/core/ctypes"
 )
 
@@ -58,7 +59,7 @@ var (
 
 type Apache struct{}
 
-func getMetrics(webserver string, metrics []string) ([]plugin.PluginMetricType, error) {
+func getMetrics(webserver string, metrics []string) ([]plugin.MetricType, error) {
 	tr := &http.Transport{}
 	client := &http.Client{Transport: tr}
 	resp, err := client.Get(webserver)
@@ -71,50 +72,43 @@ func getMetrics(webserver string, metrics []string) ([]plugin.PluginMetricType, 
 	}
 	defer resp.Body.Close()
 
-	mtsmap := make(map[string]plugin.PluginMetricType)
+	mtsmap := make(map[string]plugin.MetricType)
 	scanner := bufio.NewScanner(resp.Body)
 	for scanner.Scan() {
 		var ns string
-		var workersflag bool
 		line := scanner.Text()
 		lineslice := strings.Split(line, ": ")
-		if strings.Contains(line, ":") {
-			if strings.Contains(line, "workers") {
-				workersflag = true
-			} else {
-				ns = strings.Replace(lineslice[0], " ", "_", -1)
-				data, err := strconv.ParseFloat(lineslice[1], 64)
-				if err != nil {
-					return nil, err
-				}
-				mtsmap[ns] = plugin.PluginMetricType{
-					Namespace_: []string{"intel", "apache", ns},
+		if strings.Contains(line, "Scoreboard") {
+			line = strings.Trim(line, "Scoreboard")
+			for ns := range workers {
+				data := strings.Count(line, workers[ns])
+				mtsmap[ns] = plugin.MetricType{
+					Namespace_: core.NewNamespace("intel", "apache", "workers", ns),
 					Data_:      data,
-					Source_:    webserver,
 					Timestamp_: time.Now(),
 				}
 			}
-		}
-		if workersflag {
-			for ns, _ := range workers {
-				data := strings.Count(line, workers[ns])
-				mtsmap[ns] = plugin.PluginMetricType{
-					Namespace_: []string{"intel", "apache", "workers", ns},
-					Data_:      data,
-					Source_:    webserver,
-					Timestamp_: time.Now(),
-				}
+		} else {
+			ns = strings.Replace(lineslice[0], " ", "_", -1)
+			data, err := strconv.ParseFloat(lineslice[1], 64)
+			if err != nil {
+				return nil, err
+			}
+			mtsmap[ns] = plugin.MetricType{
+				Namespace_: core.NewNamespace("intel", "apache", ns),
+				Data_:      data,
+				Timestamp_: time.Now(),
 			}
 		}
 	}
 	if len(metrics) == 0 {
-		mts := make([]plugin.PluginMetricType, 0, len(mtsmap))
+		mts := make([]plugin.MetricType, 0, len(mtsmap))
 		for _, v := range mtsmap {
 			mts = append(mts, v)
 		}
 		return mts, nil
 	}
-	mts := make([]plugin.PluginMetricType, 0, len(metrics))
+	mts := make([]plugin.MetricType, 0, len(metrics))
 	for _, v := range metrics {
 		mt, ok := mtsmap[v]
 		if ok {
@@ -124,7 +118,7 @@ func getMetrics(webserver string, metrics []string) ([]plugin.PluginMetricType, 
 	return mts, nil
 }
 
-func (a *Apache) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.PluginMetricType, error) {
+func (a *Apache) CollectMetrics(mts []plugin.MetricType) ([]plugin.MetricType, error) {
 	config := mts[0].Config().Table()
 	webservercfg, ok := config["apache_mod_status_url"]
 	if !ok {
@@ -136,12 +130,12 @@ func (a *Apache) CollectMetrics(mts []plugin.PluginMetricType) ([]plugin.PluginM
 	}
 	metrics := make([]string, len(mts))
 	for i, m := range mts {
-		metrics[i] = m.Namespace_[len(m.Namespace_)-1]
+		metrics[i] = m.Namespace()[len(m.Namespace())-1].Value
 	}
 	return getMetrics(webserver.Value, metrics)
 }
 
-func (a *Apache) GetMetricTypes(cfg plugin.PluginConfigType) ([]plugin.PluginMetricType, error) {
+func (a *Apache) GetMetricTypes(cfg plugin.ConfigType) ([]plugin.MetricType, error) {
 	webservercfg, ok := cfg.Table()["apache_mod_status_url"]
 	if !ok {
 		return getMetrics("http://127.0.0.1:80/server-status?auto", []string{})
