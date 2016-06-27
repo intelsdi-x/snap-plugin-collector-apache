@@ -121,7 +121,7 @@ There are a number of other resources you can review to learn to use this plugin
 * [snap Apache JSON task example](examples/tasks/apache-file.json)
 
 ### Collected Metrics
-All metrics gathered by this plugin are exposed by [cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt).  
+All metrics gathered by this plugin are exposed by the [status file](https://httpd.apache.org/docs/2.4/mod/mod_status.html#machinereadable) produced by mod_status.  
 
 This plugin has the ability to gather the following metrics:
 
