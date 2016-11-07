@@ -11,8 +11,14 @@
                 "/intel/apache/BytesPerSec": {},
                 "/intel/apache/workers/Sending": {}
             },
-            "config": {
-            }
+            "publish": [
+                {
+                    "plugin_name": "file",                            
+                    "config": {
+                        "file": "/tmp/snap-apache-file.log"
+                    }
+                }
+           ]
         }
     }
 }
