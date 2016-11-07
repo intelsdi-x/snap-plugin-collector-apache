@@ -164,11 +164,11 @@ In one terminal window in the /snap directory: Running snapd with auto discovery
 ```
 $ $SNAP_PATH/snapd -l 1 -t 0 --config ../snap-plugin-collector-apache/config.json 
 ```
-Download desired processor and publisher plugins eg.
+Download desired publisher plugin eg.
 ```
 $ wget http://snap.ci.snap-telemetry.io/plugins/snap-plugin-publisher-file/latest/linux/x86_64/snap-plugin-publisher-file
 ```
-Load collector, processor and publisher
+Load collector and publisher
 ```
 $ $SNAP_PATH/snapctl plugin load snap-plugin-collector-apache
 $ $SNAP_PATH/snapctl plugin load snap-plugin-publisher-file
