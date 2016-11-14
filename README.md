@@ -19,11 +19,11 @@ limitations under the License.
 
 [![Build Status](https://travis-ci.org/intelsdi-x/snap-plugin-collector-apache.svg?branch=master)](https://travis-ci.com/intelsdi-x/snap-plugin-collector-apache)
 
-# snap collector plugin - Apache
+# Snap collector plugin - Apache
 
 This plugin collects metrics from the Apache Webserver for `mod_status`: `http://your.server.name/server-status?auto`. `?auto` is the machine-readable format for the status file.
 
-It's used in the [snap framework](http://github.com/intelsdi-x/snap).
+It's used in the [Snap framework](http://github.com/intelsdi-x/snap).
 
 1. [Getting Started](#getting-started)
   * [Installation](#installation)
@@ -48,8 +48,8 @@ In order to use this plugin you need Apache2 installed.
 ```
 sudo apt-get install apache2
 ```
-#### snap
-You can get the pre-built binaries for your OS and architecture at snap's [GitHub Releases](https://github.com/intelsdi-x/snap/releases) page.
+#### Snap
+You can get the pre-built binaries for your OS and architecture at Snap's [GitHub Releases](https://github.com/intelsdi-x/snap/releases) page.
 
 ##### To build the plugin binary:
 Fork https://github.com/intelsdi-x/snap-plugin-collector-apache
@@ -65,7 +65,7 @@ $ make
 ```
 (It may take a while to pull dependencies if you don't have them already.)
 
-This builds the plugin in `/build/rootfs/`
+This builds the plugin in `/build/${GOOS}/${GOARCH}`
 
 ##### Run tests
 ```
@@ -109,16 +109,16 @@ Check to see if Apache2 is running:
 $ service apache2 status
  * apache2 is running
 ```
-#### snap
-* Set up the [snap framework](https://github.com/intelsdi-x/snap/blob/master/README.md#getting-started)
+#### Snap
+* Set up the [Snap framework](https://github.com/intelsdi-x/snap/blob/master/README.md#getting-started)
 * Ensure `$SNAP_PATH` is exported  
-`export SNAP_PATH=$GOPATH/src/github.com/intelsdi-x/snap/build`
+`export SNAP_PATH=$GOPATH/src/github.com/intelsdi-x/snap/build/${GOOS}/${GOARCH}`
 
 ## Documentation
 There are a number of other resources you can review to learn to use this plugin:
 * [Apache mod_status documentation](https://httpd.apache.org/docs/2.4/mod/mod_status.html)
-* [snap Apache examples](#examples)
-* [snap Apache JSON task example](examples/tasks/apache-file.json)
+* [Snap Apache examples](#examples)
+* [Snap Apache JSON task example](examples/tasks/apache-file.json)
 
 ### Collected Metrics
 All metrics gathered by this plugin are exposed by the [status file](https://httpd.apache.org/docs/2.4/mod/mod_status.html#machinereadable) produced by mod_status.  
@@ -162,7 +162,16 @@ $GOPATH/src/github.com/intelsdi-x/snap-plugin-collector-apache/
 
 In one terminal window in the /snap directory: Running snapd with auto discovery, log level 1, and trust disabled. The config.json file has the webserver configuration parameters.
 ```
-$ $SNAP_PATH/bin/snapd -l 1 -t 0 -a ../snap-plugin-collector-apache/build/rootfs/:build/plugin/ --config ../snap-plugin-collector-apache/config.json 
+$ $SNAP_PATH/snapd -l 1 -t 0 --config ../snap-plugin-collector-apache/config.json 
+```
+Download desired publisher plugin eg.
+```
+$ wget http://snap.ci.snap-telemetry.io/plugins/snap-plugin-publisher-file/latest/linux/x86_64/snap-plugin-publisher-file
+```
+Load collector and publisher
+```
+$ $SNAP_PATH/snapctl plugin load snap-plugin-collector-apache
+$ $SNAP_PATH/snapctl plugin load snap-plugin-publisher-file
 ```
 Create task manifest for writing to a file. See [`../snap-plugin-collector-apache/examples/tasks/apache-file.json`](../snap-plugin-collector-apache/examples/tasks/apache-file.json):
 ```json
@@ -179,33 +188,21 @@ Create task manifest for writing to a file. See [`../snap-plugin-collector-apach
                 "/intel/apache/BytesPerSec": {},
                 "/intel/apache/workers/Sending": {}
             },
-            "config": {
-                "/intel/mock": {
-                    "user": "root",
-                    "password": "secret"
-                }
-            },
-            "process": [
+            "publish": [
                 {
-                    "plugin_name": "passthru",                    
-                    "process": null,
-                    "publish": [
-                        {
-                            "plugin_name": "file",                            
-                            "config": {
-                                "file": "/tmp/snap-apache-file.log"
-                            }
-                        }
-                    ]
+                    "plugin_name": "file",                            
+                    "config": {
+                        "file": "/tmp/snap-apache-file.log"
+                    }
                 }
-            ]
+           ]
         }
     }
 }
 ```
 Another terminal window, also in /snap:
 ```
-$ $SNAP_PATH/bin/snapctl task create -t ../snap-plugin-collector-apache/examples/tasks/apache-file.json
+$ $SNAP_PATH/snapctl task create -t ../snap-plugin-collector-apache/examples/tasks/apache-file.json
 ```
 /tmp/snap-apache-file.log
 ```
@@ -221,7 +218,7 @@ $ $SNAP_PATH/bin/snapctl task create -t ../snap-plugin-collector-apache/examples
 The next step for this plugin is to make sure it works with Lightppd and it is in active development. As we launch this plugin, we do not have any outstanding requirements for the next release. If you have a feature request, please add it as an [issue](https://github.com/intelsdi-x/snap-plugin-collector-apache/issues/new) and/or submit a [pull request](https://github.com/intelsdi-x/snap-plugin-collector-apache/pulls).
 
 ## Community Support
-This repository is one of **many** plugins in the **snap framework**: a powerful telemetry framework. See the full project at http://github.com/intelsdi-x/snap To reach out to other users, head to the [main framework](https://github.com/intelsdi-x/snap#community-support)
+This repository is one of **many** plugins in the **Snap framework**: a powerful telemetry framework. See the full project at http://github.com/intelsdi-x/snap To reach out to other users, head to the [main framework](https://github.com/intelsdi-x/snap#community-support)
 
 ## Contributing
 We love contributions!
@@ -229,7 +226,7 @@ We love contributions!
 There's more than one way to give back, from examples to blogs to code updates. See our recommended process in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
-[snap](http://github.com/intelsdi-x/snap), along with this plugin, is an Open Source software released under the Apache 2.0 [License](LICENSE).
+[Snap](http://github.com/intelsdi-x/snap), along with this plugin, is an Open Source software released under the Apache 2.0 [License](LICENSE).
 
 ## Acknowledgements
 
