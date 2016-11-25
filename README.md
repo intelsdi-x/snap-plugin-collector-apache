@@ -160,9 +160,9 @@ $GOPATH/src/github.com/intelsdi-x/snap/
 $GOPATH/src/github.com/intelsdi-x/snap-plugin-collector-apache/
 ```
 
-In one terminal window in the /snap directory: Running snapd with auto discovery, log level 1, and trust disabled. The config.json file has the webserver configuration parameters.
+In one terminal window in the /snap directory: Running snapteld with auto discovery, log level 1, and trust disabled. The config.json file has the webserver configuration parameters.
 ```
-$ $SNAP_PATH/snapd -l 1 -t 0 --config ../snap-plugin-collector-apache/config.json 
+$ $SNAP_PATH/snapteld -l 1 -t 0 --config ../snap-plugin-collector-apache/config.json 
 ```
 Download desired publisher plugin eg.
 ```
@@ -170,8 +170,8 @@ $ wget http://snap.ci.snap-telemetry.io/plugins/snap-plugin-publisher-file/lates
 ```
 Load collector and publisher
 ```
-$ $SNAP_PATH/snapctl plugin load snap-plugin-collector-apache
-$ $SNAP_PATH/snapctl plugin load snap-plugin-publisher-file
+$ $SNAP_PATH/snaptel plugin load snap-plugin-collector-apache
+$ $SNAP_PATH/snaptel plugin load snap-plugin-publisher-file
 ```
 Create task manifest for writing to a file. See [`../snap-plugin-collector-apache/examples/tasks/apache-file.json`](../snap-plugin-collector-apache/examples/tasks/apache-file.json):
 ```json
@@ -202,7 +202,7 @@ Create task manifest for writing to a file. See [`../snap-plugin-collector-apach
 ```
 Another terminal window, also in /snap:
 ```
-$ $SNAP_PATH/snapctl task create -t ../snap-plugin-collector-apache/examples/tasks/apache-file.json
+$ $SNAP_PATH/snaptel task create -t ../snap-plugin-collector-apache/examples/tasks/apache-file.json
 ```
 /tmp/snap-apache-file.log
 ```
