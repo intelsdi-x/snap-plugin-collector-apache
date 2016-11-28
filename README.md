@@ -111,8 +111,6 @@ $ service apache2 status
 ```
 #### Snap
 * Set up the [Snap framework](https://github.com/intelsdi-x/snap/blob/master/README.md#getting-started)
-* Ensure `$SNAP_PATH` is exported  
-`export SNAP_PATH=$GOPATH/src/github.com/intelsdi-x/snap/build/${GOOS}/${GOARCH}`
 
 ## Documentation
 There are a number of other resources you can review to learn to use this plugin:
@@ -162,7 +160,7 @@ $GOPATH/src/github.com/intelsdi-x/snap-plugin-collector-apache/
 
 In one terminal window in the /snap directory: Running snapteld with auto discovery, log level 1, and trust disabled. The config.json file has the webserver configuration parameters.
 ```
-$ $SNAP_PATH/snapteld -l 1 -t 0 --config ../snap-plugin-collector-apache/config.json 
+$ snapteld -l 1 -t 0 --config ../snap-plugin-collector-apache/config.json 
 ```
 Download desired publisher plugin eg.
 ```
@@ -170,8 +168,8 @@ $ wget http://snap.ci.snap-telemetry.io/plugins/snap-plugin-publisher-file/lates
 ```
 Load collector and publisher
 ```
-$ $SNAP_PATH/snaptel plugin load snap-plugin-collector-apache
-$ $SNAP_PATH/snaptel plugin load snap-plugin-publisher-file
+$ snaptel plugin load snap-plugin-collector-apache
+$ snaptel plugin load snap-plugin-publisher-file
 ```
 Create task manifest for writing to a file. See [`../snap-plugin-collector-apache/examples/tasks/apache-file.json`](../snap-plugin-collector-apache/examples/tasks/apache-file.json):
 ```json
@@ -202,7 +200,7 @@ Create task manifest for writing to a file. See [`../snap-plugin-collector-apach
 ```
 Another terminal window, also in /snap:
 ```
-$ $SNAP_PATH/snaptel task create -t ../snap-plugin-collector-apache/examples/tasks/apache-file.json
+$ snaptel task create -t ../snap-plugin-collector-apache/examples/tasks/apache-file.json
 ```
 /tmp/snap-apache-file.log
 ```
