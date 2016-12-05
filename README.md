@@ -38,7 +38,7 @@ It's used in the [Snap framework](http://github.com/intelsdi-x/snap).
 
 ## Getting Started
 
-In order to use this plugin you need Apache2 installed. 
+In order to use this plugin you need Apache2 installed.
 
 ### Operating systems
 * Linux/amd64
@@ -69,7 +69,8 @@ This builds the plugin in `/build/${GOOS}/${GOARCH}`
 
 ##### Run tests
 ```
-TODO
+export TEST_TYPE=small
+make test
 ```
 
 ### Configuration and Usage
@@ -79,7 +80,7 @@ The [Apache mod_status documentation](https://httpd.apache.org/docs/2.4/mod/mod_
 $ ls /etc/apache2/
 apache2.conf  conf-available  conf-enabled  envvars  magic  mods-available  mods-enabled  ports.conf  sites-available  sites-enabled
 ```
-Make sure mod_status is enabled with the following uncommented. Extended status needs to be on. 
+Make sure mod_status is enabled with the following uncommented. Extended status needs to be on.
 If you want the mod status url to be `mod_status` instead of `server-status` just change the location line and the `apache_suffix` in the config.json file to match.
 
 ```
@@ -90,7 +91,7 @@ ExtendedStatus on
 ```
 If no changes needed to be made, run the following to start apache.
 ```
-$ sudo service apache2 start 
+$ sudo service apache2 start
 ```
 If any changes needed to be made, run the following to restart apache after you save the file.
 ```
@@ -101,7 +102,7 @@ You can stop Apache2 and then if there are any Apache processes running, kill th
 ```
 $ sudo service apache2 stop
 $ ps aux | grep apache
-$ kill -9 <PIDs> 
+$ kill -9 <PIDs>
 $ sudo service apache2 start
 ```
 Check to see if Apache2 is running:
@@ -120,36 +121,10 @@ There are a number of other resources you can review to learn to use this plugin
 
 ### Collected Metrics
 All metrics gathered by this plugin are exposed by the [status file](https://httpd.apache.org/docs/2.4/mod/mod_status.html#machinereadable) produced by mod_status.  
-
 This plugin has the ability to gather the following metrics:
+[Available Metrics](METRICS.md)
 
-Namespace | Data Type | Description (optional)
-----------|-----------|-----------------------
-/intel/apache/BusyWorkers|float64|Busy workers
-/intel/apache/BytesPerReq|float64|Bytes transferred per request
-/intel/apache/BytesPerSec|float64|Bytes transferred per second
-/intel/apache/CPULoad|float64|CPU load
-/intel/apache/ConnsAsyncClosing|float64|Asynchronous closing connections
-/intel/apache/ConnsAsyncKeepAlive|float64|Asynchronous keepalive connections
-/intel/apache/ConnsAsyncWriting|float64|Asynchronous writing connections
-/intel/apache/ConnsTotal|float64|Total connections
-/intel/apache/IdleWorkers|float64|Idle workers
-/intel/apache/ReqPerSec|float64|Requests per second
-/intel/apache/Total_Accesses|float64|Total accesses
-/intel/apache/Total_kBytes|float64|Total kBytes
-/intel/apache/Uptime|float64|Server uptime
-/intel/apache/workers/Closing|float64|Closing connection
-/intel/apache/workers/DNSLookup|float64|DNS Lookup
-/intel/apache/workers/Finishing|float64|Gracefully finishing
-/intel/apache/workers/Idle_Cleanup|float64|Idle cleanup of worker
-/intel/apache/workers/Keepalive|float64|Keepalive (read)
-/intel/apache/workers/Logging|float64|Logging
-/intel/apache/workers/Open|float64|Open slot with no current process
-/intel/apache/workers/Reading|float64|Reading Request
-/intel/apache/workers/Sending|float64|Sending Reply
-/intel/apache/workers/Starting|float64|Starting up
-/intel/apache/workers/Waiting|float64|Waiting for Connection
-
+This plugin will provide two seperate metric catalogs based on whether safe or unsafe collection is configured.
 
 ### Examples
 If this is your directory structure:
@@ -160,7 +135,7 @@ $GOPATH/src/github.com/intelsdi-x/snap-plugin-collector-apache/
 
 In one terminal window in the /snap directory: Running snapteld with auto discovery, log level 1, and trust disabled. The config.json file has the webserver configuration parameters.
 ```
-$ snapteld -l 1 -t 0 --config ../snap-plugin-collector-apache/config.json 
+$ snapteld -l 1 -t 0
 ```
 Download desired publisher plugin eg.
 ```
@@ -174,28 +149,33 @@ $ snaptel plugin load snap-plugin-publisher-file
 Create task manifest for writing to a file. See [`../snap-plugin-collector-apache/examples/tasks/apache-file.json`](../snap-plugin-collector-apache/examples/tasks/apache-file.json):
 ```json
 {
-    "version": 1,
-    "schedule": {
-        "type": "simple",
-        "interval": "1s"
-    },
-    "workflow": {
-        "collect": {
-            "metrics": {
-                "/intel/apache/CPULoad": {},
-                "/intel/apache/BytesPerSec": {},
-                "/intel/apache/workers/Sending": {}
-            },
-            "publish": [
-                {
-                    "plugin_name": "file",                            
-                    "config": {
-                        "file": "/tmp/snap-apache-file.log"
-                    }
-                }
-           ]
-        }
-    }
+  "version": 1,
+  "schedule": {
+      "type": "simple",
+      "interval": "1s"
+  },
+  "workflow": {
+      "collect": {
+          "metrics": {
+              "/intel/apache/CPULoad": {},
+              "/intel/apache/BytesPerSec": {},
+              "/intel/apache/workers/Sending": {}
+          },
+          "config": {
+            "/intel/apache": {
+              "apache_mod_status_url": "https://www.apache.org/server-status?auto"
+            }
+          },
+          "publish": [
+              {
+                  "plugin_name": "file",
+                  "config": {
+                      "file": "/tmp/snap-apache-file.log"
+                  }
+              }
+          ]
+      }
+  }
 }
 ```
 Another terminal window, also in /snap:
@@ -211,6 +191,20 @@ $ snaptel task create -t ../snap-plugin-collector-apache/examples/tasks/apache-f
 2016-01-27 15:08:52.096056768 -0800 PST|[intel apache CPULoad]|.0209417|127.0.0.1:80
 2016-01-27 15:08:52.096089108 -0800 PST|[intel apache workers Sending]|1|127.0.0.1:80
 ```
+
+### Unsafe collection
+Not all version of the apache status endpoint return the same metrics. To allow for consistent collections from different apache servers safe collection is enabled for the plugin by default. To override safe collection and expose all the available metrics alter the [snapteld global configuration](https://github.com/intelsdi-x/snap/blob/master/docs/SNAPTELD_CONFIGURATION.md) to include the following:
+
+```
+control:
+    plugins:
+      collector:
+        apache:
+          all:
+            safe: false
+```
+
+The provided [example config](examples/configs/config.yaml) can be used to load this plugin in unsafe mode
 
 ### Roadmap
 The next step for this plugin is to make sure it works with Lightppd and it is in active development. As we launch this plugin, we do not have any outstanding requirements for the next release. If you have a feature request, please add it as an [issue](https://github.com/intelsdi-x/snap-plugin-collector-apache/issues/new) and/or submit a [pull request](https://github.com/intelsdi-x/snap-plugin-collector-apache/pulls).

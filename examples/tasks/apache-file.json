@@ -12,10 +12,13 @@
                 "/intel/apache/workers/Sending": {}
             },
             "config": {
+              "/intel/apache": {
+                "apache_mod_status_url": "https://www.apache.org/server-status?auto"
+              }
             },
             "publish": [
                 {
-                    "plugin_name": "file",                    
+                    "plugin_name": "file",
                     "config": {
                         "file": "/tmp/snap-apache-file.log"
                     }
