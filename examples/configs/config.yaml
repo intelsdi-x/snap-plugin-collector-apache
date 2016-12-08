@@ -1,0 +1,7 @@
+---
+control:
+    plugins:
+      collector:
+        apache:
+          all:
+            safe: false
