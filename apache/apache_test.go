@@ -75,6 +75,36 @@ ConnsAsyncKeepAlive: 2
 ConnsAsyncClosing: 3
 Scoreboard: CDGIKLRWS_...`
 
+	exampleUnknownKeysStatus = `localhost
+ServerVersion: Apache/2.4.18 (Ubuntu)
+ServerMPM: event
+Server Built: 2016-07-14T12:32:26
+CurrentTime: Thursday, 01-Dec-2016 20:09:30 UTC
+RestartTime: Thursday, 01-Dec-2016 20:01:42 UTC
+ParentServerConfigGeneration: 35
+ParentServerMPMGeneration: 100
+ServerUptimeSeconds: 4292
+ServerUptime: 7 minutes 48 seconds
+Load1: 0.01
+Load5: 0.03
+Load15: 0.05
+Total Accesses: 10
+Total kBytes: 1024
+CPUUser: 11001
+CPUSystem: 1305
+CPUChildrenUser: 315
+CPUChildrenSystem: 135
+ReqPerSec: 0.123
+BytesPerSec: 1.123
+BusyWorkers: 10
+IdleWorkers: 50
+ConnsTotal: 100
+ConnsAsyncWriting: 1
+ConnsAsyncKeepAlive: 2
+ConnsAsyncClosing: 3
+Scoreboard: CDGIKLRWS_...
+UnknownKeyhere: 123`
+
 	allValues = map[string]interface{}{
 		"intel.apache.CPULoad":                      0,
 		"intel.apache.BytesPerReq":                  0,
@@ -345,5 +375,30 @@ func TestUnsafeApachePlugin(t *testing.T) {
 			So(err, ShouldNotBeNil)
 			So(collectedMetrics, ShouldBeNil)
 		})
+	})
+}
+
+func TestNewStatus(t *testing.T) {
+	config := plugin.Config{
+		"apache_mod_status_url": apacheURL,
+		"safe":                  true,
+	}
+
+	Convey("Collect safe legacy endpoint", t, func() {
+		apacheCollector := Apache{}
+		httpmock.Activate()
+		defer httpmock.DeactivateAndReset()
+		httpmock.RegisterResponder("GET", apacheURL,
+			func(req *http.Request) (*http.Response, error) {
+				resp := httpmock.NewStringResponse(200, exampleUnknownKeysStatus)
+				return resp, nil
+			},
+		)
+		metrics := getApacheMetrics(false)
+		for i := range metrics {
+			metrics[i].Config = config
+		}
+		_, err := apacheCollector.CollectMetrics(metrics)
+		So(err, ShouldBeNil)
 	})
 }

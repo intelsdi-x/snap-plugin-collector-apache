@@ -136,6 +136,7 @@ func NewStatus(metricMap map[string][]string) (Status, error) {
 		ServerUptime:  "Not Found",
 	}
 	decoder := schema.NewDecoder()
+	decoder.IgnoreUnknownKeys(true)
 	err := decoder.Decode(status, metricMap)
 	if err != nil {
 		return nil, err
