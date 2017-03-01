@@ -1,0 +1,19 @@
+---
+version: 1
+schedule:
+  type: simple
+  interval: 1s
+max-failures: 1
+workflow:
+  collect:
+    metrics:
+      "/intel/apache/CPULoad": {}
+      "/intel/apache/BytesPerSec": {}
+      "/intel/apache/workers/Sending": {}
+    config:
+      "/intel/apache":
+        apache_mod_status_url: http://apache:80/server-status?auto
+    publish:
+    - plugin_name: file
+      config:
+        file: "/tmp/snap-apache-file.log"

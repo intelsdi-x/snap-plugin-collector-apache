@@ -1,0 +1,21 @@
+version: '2'
+services:
+  snap:
+    image: intelsdi/snap:alpine_test
+    environment:
+      SNAP_VERSION: ${SNAP_VERSION}
+      INFLUXDB_HOST: "influxdb"
+    volumes:
+      - ${PLUGIN_PATH}:/plugin
+    links:
+      - apache
+  apache:
+    image: httpd:2.4
+    volumes:
+      - ${PLUGIN_PATH}/scripts/test/conf:/usr/local/apache2/conf
+    expose:
+      - "80"
+      - "443"
+    ports:
+      - "8080:80"
+      - "8443:443"

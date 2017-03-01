@@ -6,10 +6,20 @@
       - GOOS: darwin
         GOARCH: amd64
 .travis.yml:
+  sudo: true
+  services:
+    - docker
   env:
     global:
       - ORG_PATH=/home/travis/gopath/src/github.com/intelsdi-x
       - SNAP_PLUGIN_SOURCE=/home/travis/gopath/src/github.com/${TRAVIS_REPO_SLUG}
+    matrix:
+      - TEST_TYPE: build
+      - TEST_TYPE: large
+  matrix:
+    exclude:
+      - go: 1.6.x
+        env: TEST_TYPE=large
   deploy:
     access_key_id: AKIAINMB43VSSPFZISAA
     secret_access_key:
