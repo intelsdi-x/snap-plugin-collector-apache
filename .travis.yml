@@ -2,8 +2,8 @@
 sudo: true
 language: go
 go:
-- 1.6.x
 - 1.7.x
+- 1.8.x
 services:
 - docker
 env:
@@ -11,13 +11,15 @@ env:
   - ORG_PATH=/home/travis/gopath/src/github.com/intelsdi-x
   - SNAP_PLUGIN_SOURCE=/home/travis/gopath/src/github.com/${TRAVIS_REPO_SLUG}
   matrix:
-  - TEST_TYPE=small
-  - TEST_TYPE=large
-  - TEST_TYPE=build
+  - TEST_TYPE: small
+  - TEST_TYPE: large
+  - TEST_TYPE: build
 matrix:
   exclude:
-  - go: 1.6.x
+  - go: 1.7.x
     env: TEST_TYPE=large
+  - go: 1.7.x
+    env: TEST_TYPE=build
 before_install:
 - "[[ -d $SNAP_PLUGIN_SOURCE ]] || mkdir -p $ORG_PATH && ln -s $TRAVIS_BUILD_DIR $SNAP_PLUGIN_SOURCE"
 install:
@@ -33,9 +35,8 @@ before_deploy:
 - "./scripts/pre_deploy.sh"
 deploy:
 - provider: s3
-  access_key_id: AKIAINMB43VSSPFZISAA
-  secret_access_key:
-    secure: cs0xH770DAlOHzRvub7Vf7bmL8Q+L+L31FmFhBA+LEuu0e6Rc++0KJCfXGJ7Vov5CVZxGPV9UPvTmGIsel1NxMroBfMSsdm8f4ognSGqbQf9yRDmqE7A4QLA1G91KKN5n48wKJfqMvWv+bYpZJ4KVk7kSlix8Szjr1U0mM7t6ghlnb/lMo8tNF7EJUR18wSU0OwcS1ilEfb+A54HgVqlVycEnRa+6jrlgbryhWqV0en3w32W3WaRb5ErnB7qxHvgEUUxpuw+wmR+34gqGH+vJKoXvjjEzKcF2Ya+HH3yWVALQONdtYeXYU4hUHlWxTZJYH7Im24t5WHNbCog0OOxF8CJqHYIAzT9oDfU1nyO5rxjuUYI9b2yD1l0pME6gdBi/9SHEYzRf5uDwcr6r00b2Oa8LOY0fDYlYgsvV4nOpjigRGDsgYpzlYN6Yu3y0DpzMqojQvPm8kzTeTT5M4eKRK9ZVXdq4paIoWXjqsJMcZkB/nXmJDfMTm2wiA2NJMgLrzUB509Ab914UKqnPe1OBp72BPny18a6c6CAPebGsT6EISW7fzpuMyLGVFlgrUur8nZP6Iwr1NxEnHMoQwKYRh3ZM2kHzdLCNOFV6f1bei9dHTufhE0KbKM5ITvbiEznfa/8U8cHT9fezQRk49JcNEcc2pmZlDBeMRLC2a0CHqc=
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
   bucket: snap.ci.snap-telemetry.io
   region: us-west-2
   skip_cleanup: true
@@ -45,11 +46,10 @@ deploy:
   on:
     repo: intelsdi-x/snap-plugin-collector-apache
     branch: master
-    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION =~ ^1\.7\.[0-9]+$
+    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION =~ ^1\.8(|\.[0-9]+)$
 - provider: s3
-  access_key_id: AKIAINMB43VSSPFZISAA
-  secret_access_key:
-    secure: cs0xH770DAlOHzRvub7Vf7bmL8Q+L+L31FmFhBA+LEuu0e6Rc++0KJCfXGJ7Vov5CVZxGPV9UPvTmGIsel1NxMroBfMSsdm8f4ognSGqbQf9yRDmqE7A4QLA1G91KKN5n48wKJfqMvWv+bYpZJ4KVk7kSlix8Szjr1U0mM7t6ghlnb/lMo8tNF7EJUR18wSU0OwcS1ilEfb+A54HgVqlVycEnRa+6jrlgbryhWqV0en3w32W3WaRb5ErnB7qxHvgEUUxpuw+wmR+34gqGH+vJKoXvjjEzKcF2Ya+HH3yWVALQONdtYeXYU4hUHlWxTZJYH7Im24t5WHNbCog0OOxF8CJqHYIAzT9oDfU1nyO5rxjuUYI9b2yD1l0pME6gdBi/9SHEYzRf5uDwcr6r00b2Oa8LOY0fDYlYgsvV4nOpjigRGDsgYpzlYN6Yu3y0DpzMqojQvPm8kzTeTT5M4eKRK9ZVXdq4paIoWXjqsJMcZkB/nXmJDfMTm2wiA2NJMgLrzUB509Ab914UKqnPe1OBp72BPny18a6c6CAPebGsT6EISW7fzpuMyLGVFlgrUur8nZP6Iwr1NxEnHMoQwKYRh3ZM2kHzdLCNOFV6f1bei9dHTufhE0KbKM5ITvbiEznfa/8U8cHT9fezQRk49JcNEcc2pmZlDBeMRLC2a0CHqc=
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
   bucket: snap.ci.snap-telemetry.io
   region: us-west-2
   skip_cleanup: true
@@ -59,10 +59,9 @@ deploy:
   on:
     repo: intelsdi-x/snap-plugin-collector-apache
     tags: true
-    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION =~ ^1\.7\.[0-9]+$
+    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION =~ ^1\.8(|\.[0-9]+)$
 - provider: releases
-  api_key:
-    secure: ES72ATHa8ZYVs7gXpjtxcIFPKnppjtm7TBFR/cKVFvpj6AN/19KGSTTIQ5IKsBcaVk2isKL43l6K0cML6ztjKJf7ZXO9dTDh6G/qfsC0/mF39Uo7+t7uRDyh8UZQSRyDxCtlLR3MJ3FGb6cwBrTNT15fEmmKkJ66ZkLtKbJIUa6l96wgxafZFWTJS4NXgcnTklHRgdbOuWkebdaJBFPQ+lyQZWmB8DdSfW0Aq/16nHunycOtvk2qTIXoRSS+c0gSekOtTRccoXa3qja5ao3sBaQYi+NkAt2T8GIBJZRbZJcerQDgsa3MuKzy7FKatI5Bxf1P5qCUhlbqUcg9Ire+58VUmeqkpOk10x2ydGyPtAERflD79kE3KhyWItZiKfBij2l2jHIrJWrJUBilPSzHiJQpKW9nNSC5ayb8IaRivtcn9L+WmVIXL980j+eTrTi0qG1kFZl5ROlbxjlh+1Yu7OrhCHN65MBAz61QCYrwvo4Umf/QDX0Tol5eHNfkSlXeUaHrMajfkrGOn+ES/lcvSPHp6FLWY2cX8DBeZZ4GgI3mf+AYqzF8ddR7SlEJGByp/lhyt4YGq67kiF5hXQQo5dyTFDRsv+01HHAtqPpcFPHHwSqxfujBa1tkpLTo7IQj8ABgqglM18g1qFGbTf7Q0afhd3Y618NwPqiDg9xJmW0=
+  api_key: $GITHUB_API_KEY
   file:
     - release/snap-plugin-collector-apache_linux_x86_64
     - release/snap-plugin-collector-apache_darwin_x86_64
@@ -70,4 +69,4 @@ deploy:
   on:
     repo: intelsdi-x/snap-plugin-collector-apache
     tags: true
-    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION =~ ^1\.7\.[0-9]+$
+    condition: $TEST_TYPE = "build" && $TRAVIS_GO_VERSION =~ ^1\.8(|\.[0-9]+)$
