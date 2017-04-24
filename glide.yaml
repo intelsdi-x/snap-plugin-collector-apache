@@ -1,8 +1,12 @@
 package: github.com/intelsdi-x/snap-plugin-collector-apache
 import:
-- package: github.com/intelsdi-x/snap
+- package: github.com/gorilla/schema
+- package: github.com/intelsdi-x/snap-plugin-lib-go
   subpackages:
-  - control/plugin
-  - control/plugin/cpolicy
-  - core
-  - core/ctypes
+  - v1/plugin
+testImport:
+- package: github.com/jarcoal/httpmock
+- package: github.com/smartystreets/goconvey
+  version: ^1.6.2
+  subpackages:
+  - convey

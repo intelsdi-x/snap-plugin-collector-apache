@@ -26,7 +26,7 @@ import (
 
 const (
 	pluginName    = "apache"
-	pluginVersion = 4
+	pluginVersion = 5
 )
 
 func main() {
