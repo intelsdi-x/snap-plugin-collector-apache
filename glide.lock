@@ -1,26 +1,21 @@
-hash: 4ee79cf856d954960ae504ac75907e10d145a2813d069fd8e4fbc3e942318a40
-updated: 2016-12-05T10:08:31.722446697-05:00
+hash: 6813184a4f4f7614942cbf258b497f4055c614611a12c1846926a2972a73594f
+updated: 2017-04-24T15:52:13.166745084+02:00
 imports:
 - name: github.com/golang/protobuf
   version: 888eb0692c857ec880338addf316bd662d5e630e
   subpackages:
   - proto
 - name: github.com/gorilla/schema
-  version: 0164a00ab4cd01d814d8cd5bf63fd9fcea30e23b
-- name: github.com/intelsdi-x/snap
-  version: 9a05d6629e21a2e4ff95f17ca365dd359bd1f278
-  subpackages:
-  - control/plugin
-  - control/plugin/cpolicy
-  - core
-  - core/ctypes
+  version: 1c72d033473165ade8a126ba64180d76a9212dcd
 - name: github.com/intelsdi-x/snap-plugin-lib-go
-  version: 4b5999a62ffb7604f173c1ab3c2205ba8b559624
+  version: 3527311f5c8e6fe9b55fc1f44e1b515a30845e18
   subpackages:
   - v1/plugin
   - v1/plugin/rpc
 - name: github.com/julienschmidt/httprouter
-  version: 4563b0ba73e4db6c6423b60a26f3cadd2e9a1ec9
+  version: 6f3f3919c8781ce5c0509c83fffc887a7830c938
+- name: github.com/Sirupsen/logrus
+  version: 10f801ebc38b33738c9d17d50860f484a0988ff5
 - name: golang.org/x/net
   version: 154d9f9ea81208afed560f4cf27b4860c8ed1904
   subpackages:
@@ -30,6 +25,10 @@ imports:
   - internal/timeseries
   - lex/httplex
   - trace
+- name: golang.org/x/sys
+  version: c8bc69bc2db9c57ccf979550bc69655df5039a8a
+  subpackages:
+  - unix
 - name: google.golang.org/grpc
   version: 0032a855ba5c8a3c8e0d71c2deef354b70af1584
   subpackages:
@@ -47,7 +46,7 @@ testImports:
   subpackages:
   - js
 - name: github.com/jarcoal/httpmock
-  version: 145b10d659265440f062c31ea15326166bae56ee
+  version: 4442edb3db31196622da56482fd8d0fa375fba4d
 - name: github.com/jtolds/gls
   version: 8ddce2a84170772b95dd5d576c48d517b22cac63
 - name: github.com/smartystreets/assertions
@@ -56,7 +55,7 @@ testImports:
   - internal/go-render/render
   - internal/oglematchers
 - name: github.com/smartystreets/goconvey
-  version: 995f5b2e021c69b8b028ba6d0b05c1dd500783db
+  version: d4c757aa9afd1e2fc1832aaab209b5794eb336e1
   subpackages:
   - convey
   - convey/gotest
