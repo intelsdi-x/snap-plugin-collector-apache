@@ -1,0 +1,11 @@
+name: apache
+type: collector
+maintainer: core
+license: Apache-2.0
+description: "Collects Apache webserver mod_status metrics"
+badge:
+  - "[![Build Status](https://travis-ci.org/intelsdi-x/snap-plugin-collector-apache.svg?branch=master)](https://travis-ci.org/intelsdi-x/snap-plugin-collector-apache)"
+  - "[![Build Status](https://ci.snap-telemetry.io/job/snap-plugin-collector-apache-ec2-periodic/badge/icon)](https://ci.snap-telemetry.io/job/snap-plugin-collector-apache-ec2-periodic/)"
+ci:
+  - https://travis-ci.org/intelsdi-x/snap-plugin-collector-apache
+  - https://ci.snap-telemetry.io/job/snap-plugin-collector-apache-ec2-periodic
